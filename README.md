@@ -1,5 +1,6 @@
 [![Code Climate](https://codeclimate.com/github/com-cafe/com-cafe.png)](https://codeclimate.com/github/com-cafe/com-cafe)
 [![Dependency Status](https://gemnasium.com/com-cafe/com-cafe.png)](https://gemnasium.com/com-cafe/com-cafe)
+[![Build Status](https://travis-ci.org/com-cafe/com-cafe.png?branch=master)](https://travis-ci.org/com-cafe/com-cafe)
 
 # README
 
