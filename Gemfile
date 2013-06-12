@@ -14,8 +14,12 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'debugger', group: [:development, :test]
+group :development do
+  gem 'brakeman', require: false
+  gem "rails_best_practices", require: false
+end
 
 group :test, :development do
   gem 'rspec-rails'
+  gem 'debugger'
 end
