@@ -1,31 +1,18 @@
-<h1>Listing posts</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Url</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @posts.each do |post| %>
-      <tr>
-        <td><%= post.title %></td>
-        <td><%= post.description %></td>
-        <td><%= post.url %></td>
-        <td><%= link_to 'Show', post %></td>
-        <td><%= link_to 'Edit', edit_post_path(post) %></td>
-        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Post', new_post_path %>
+<div class="main-content">
+  <div class="posts-area">
+    <ul class="posts-list">
+      <% @posts.each do |post| %>
+        <li class="post">
+          <a class="avatar" href="#">
+            <img src="http://www.gravatar.com/avatar/eb8975af8e49e19e3dd6b6b84a542e26?size=64">
+          </a>
+          <div class="text">
+            <h4><%= post.title %></h4>
+            <h5><a href="#">Guilherme Garnier</a></h5>
+            <%= post.description %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div><!--/posts-section-->
+</div><!--/main-content-->
