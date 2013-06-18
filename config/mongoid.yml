@@ -1,6 +1,13 @@
 development:
   sessions:
     default:
-      database: com-cafe
+      database: comcafe_development
+      hosts:
+        - localhost:27017
+
+test:
+  sessions:
+    default:
+      database: comcafe_test
       hosts:
         - localhost:27017
