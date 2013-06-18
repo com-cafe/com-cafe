@@ -1,12 +1,8 @@
+@import "bootstrap";
+
 html,
 body {
-  height: 100%; /* styck footer */
-}
-
-
-ul.media-list li {
-  border-bottom: 1px solid #EEE;
-  padding-bottom: 15px;
+  height: 100%;
 }
 
 /* Wrapper for page content to push down footer */
@@ -26,27 +22,42 @@ ul.media-list li {
   background-color: #f5f5f5;
 }
 
-/* Lastly, apply responsive CSS fixes as necessary */
-@media (max-width: 767px) {
-  #footer {
-    margin-left: -20px;
-    margin-right: -20px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-}
-
-/* Custom page CSS
--------------------------------------------------- */
-/* Not required for template or sticky footer method. */
-
-#wrap > .container {
+.content {
+  @include container-fixed;
   padding: 100px 15px 0;
 }
-.container .credit {
-  margin: 20px 0;
+
+.main-content {
+  @include make-row;
 }
 
-code {
-  font-size: 80%;
+.posts-area {
+  @include make-column(7);
+  @include make-column-offset(1);
+}
+
+.posts-list {
+  @extend .media-list;
+
+  .post {
+    @extend .media;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #EEE;
+
+    &:last-child {
+      border: none;
+    }
+
+    .text {
+      @extend .media-body;
+    }
+
+    .avatar {
+      @extend .pull-right;
+
+      img {
+        @extend .media-object;
+      }
+    }
+  }
 }
