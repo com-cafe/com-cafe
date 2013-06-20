@@ -3,126 +3,121 @@ require 'spec_helper'
 describe PostsController do
   let(:valid_attributes) { { "title" => "post title", "description" => "post description", "url" => "http://domain.com" } }
 
-  let(:valid_session) { {} }
+  let(:valid_post) { Post.new valid_attributes }
 
   describe "GET index" do
     it "assigns all posts as @posts" do
-      post = Post.create! valid_attributes
-      get :index, {}, valid_session
-      assigns(:posts).should eq([post])
+      Post.should_receive(:all).and_return([valid_post])
+
+      get :index, {}
+      assigns(:posts).should eq([valid_post])
     end
   end
 
   describe "GET show" do
     it "assigns the requested post as @post" do
-      post = Post.create! valid_attributes
-      get :show, {id: post.to_param}, valid_session
-      assigns(:post).should eq(post)
+      Post.should_receive(:find).with(valid_post.id.to_s).and_return(valid_post)
+
+      get :show, {id: valid_post.id}
+      assigns(:post).should eq(valid_post)
     end
   end
 
   describe "GET new" do
     it "assigns a new post as @post" do
-      get :new, {}, valid_session
+      get :new, {}
       assigns(:post).should be_a_new(Post)
     end
   end
 
   describe "GET edit" do
     it "assigns the requested post as @post" do
-      post = Post.create! valid_attributes
-      get :edit, {id: post.to_param}, valid_session
-      assigns(:post).should eq(post)
+      Post.should_receive(:find).with(valid_post.id.to_s).and_return(valid_post)
+
+      get :edit, {id: valid_post.id}
+      assigns(:post).should eq(valid_post)
     end
   end
 
   describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Post" do
-        expect {
-          post :create, {post: valid_attributes}, valid_session
-        }.to change(Post, :count).by(1)
-      end
+    before do
+      Post.any_instance.stub(:save)
+    end
 
-      it "assigns a newly created post as @post" do
-        post :create, {post: valid_attributes}, valid_session
-        assigns(:post).should be_a(Post)
-        assigns(:post).should be_persisted
+    it "assigns a newly created post as @post" do
+      post :create, {post: valid_attributes}
+      assigns(:post).should be_a(Post)
+    end
+
+    describe "with valid params" do
+      before do
+        Post.any_instance.should_receive(:save).and_return(true)
       end
 
       it "redirects to the created post" do
-        post :create, {post: valid_attributes}, valid_session
+        post :create, {post: valid_attributes}
         response.should redirect_to(Post.last)
       end
     end
 
     describe "with invalid params" do
-      it "assigns a newly created but unsaved post as @post" do
-        Post.any_instance.stub(:save).and_return(false)
-        post :create, {post: { "title" => "invalid value" }}, valid_session
-        assigns(:post).should be_a_new(Post)
+      before do
+        Post.any_instance.should_receive(:save).and_return(false)
       end
 
       it "re-renders the 'new' template" do
         Post.any_instance.stub(:save).and_return(false)
-        post :create, {post: { "title" => "invalid value" }}, valid_session
+        post :create, {post: { "title" => "invalid value" }}
         response.should render_template("new")
       end
     end
   end
 
   describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested post" do
-        post = Post.create! valid_attributes
+    let(:new_attributes) {{ "title" => "MyString" }}
+    let(:do_request) { put :update, {id: valid_post.id, post: new_attributes} }
 
-        Post.any_instance.should_receive(:update).with({ "title" => "MyString" })
-        put :update, {id: post.to_param, post: { "title" => "MyString" }}, valid_session
+    before do
+      Post.should_receive(:find).with(valid_post.id.to_s).and_return(valid_post)
+    end
+
+    describe "with valid params" do
+      before do
+        valid_post.should_receive(:update).with(new_attributes).and_return(true)
+        do_request
       end
 
       it "assigns the requested post as @post" do
-        post = Post.create! valid_attributes
-        put :update, {id: post.to_param, post: valid_attributes}, valid_session
-        assigns(:post).should eq(post)
+        assigns(:post).should eq(valid_post)
       end
 
       it "redirects to the post" do
-        post = Post.create! valid_attributes
-        put :update, {id: post.to_param, post: valid_attributes}, valid_session
-        response.should redirect_to(post)
+        response.should redirect_to(valid_post)
       end
     end
 
     describe "with invalid params" do
-      it "assigns the post as @post" do
-        post = Post.create! valid_attributes
+      before do
+        valid_post.should_receive(:update).with(new_attributes).and_return(false)
+        do_request
+      end
 
-        Post.any_instance.stub(:update).and_return(false)
-        put :update, {id: post.to_param, post: { "title" => "invalid value" }}, valid_session
-        assigns(:post).should eq(post)
+      it "assigns the post as @post" do
+        assigns(:post).should eq(valid_post)
       end
 
       it "re-renders the 'edit' template" do
-        post = Post.create! valid_attributes
-
-        Post.any_instance.stub(:update).and_return(false)
-        put :update, {id: post.to_param, post: { "title" => "invalid value" }}, valid_session
         response.should render_template("edit")
       end
     end
   end
 
   describe "DELETE destroy" do
-    it "destroys the requested post" do
-      post = Post.create! valid_attributes
-      expect {
-        delete :destroy, {id: post.to_param}, valid_session
-      }.to change(Post, :count).by(-1)
-    end
-
     it "redirects to the posts list" do
-      post = Post.create! valid_attributes
-      delete :destroy, {id: post.to_param}, valid_session
+      Post.should_receive(:find).with(valid_post.id.to_s).and_return(valid_post)
+      valid_post.should_receive(:destroy)
+      delete :destroy, {id: valid_post.id}
+
       response.should redirect_to(posts_url)
     end
   end
